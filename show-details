@@ -1,0 +1,20 @@
+#!/bin/zsh
+# vim: sw=8 ts=8
+
+ME=$(basename $0)
+
+T=${TMP:-${TMPDIR:-/tmp}}/${ME}.$$.tmp
+trap "rm -f ${T}" 0
+for fn in $@
+do
+	START=$(echo "${fn}" | sed -e 's/.*-//g')
+	sed <<-EOF -e "s/FIXME/${fn}/g" -e "s/START/${START}/" >${T}
+	set xlabel "WAITING PERIOD"
+	set ylabel "DELAY (seconds)"
+	set style data points
+	set pointsize 2.0
+	plot "FIXME" title "Initial Delay START"
+	pause mouse
+	EOF
+	gnuplot ${T}
+done
